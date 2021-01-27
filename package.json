@@ -1,0 +1,38 @@
+{
+  "name": "weather-app",
+  "version": "1.0.0",
+  "description": "A full-stack weather app using Weather API",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbrisk/weather-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cbrisk/weather-app/issues"
+  },
+  "homepage": "https://github.com/cbrisk/weather-app#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "pg": "^8.5.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-react-jsx": "^7.12.12",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.18.0",
+    "webpack-cli": "^4.4.0"
+  }
+}
