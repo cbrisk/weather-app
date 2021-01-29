@@ -1,3 +1,4 @@
+require('dotenv/config');
 const path = require('path');
 
 const clientPath = path.join(__dirname, 'client');

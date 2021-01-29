@@ -30,15 +30,15 @@ export default class App extends React.Component {
   }
 
   handleSubmit(event) {
+    this.setState({ display: false });
     const { zip } = this.state;
     if (event) {
       event.preventDefault();
-      if (zip.length !== 5 && event.target.matches('form')) {
-        window.alert("Zip Code must be 5 digits");
-      }
     }
-    this.setState({display: false});
-    fetch(`http://localhost:3000/api/weather/${zip}`)
+    if (zip.length !== 5) {
+      window.alert("Zip Code must be 5 digits");
+    }
+    fetch(`/api/weather/${zip}`)
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -50,15 +50,27 @@ export default class App extends React.Component {
       });
   }
 
-  addFavorite(name, zip) {
-    const copyFavs = this.state.favorites.slice();
-    copyFavs.push({name, zip});
-    this.setState({
-      favorites: copyFavs
-    });
+  addFavorite(zip, name) {
+    const body = { zip, name };
+    fetch(`/api/favorites`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
   removeZip(zip) {
+    fetch(`/api/favorites/${zip}`, {
+      method: 'DELETE'
+    })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     let copyFavs = this.state.favorites.slice();
     copyFavs = copyFavs.filter(item => item.zip !== zip);
     this.setState({
@@ -67,6 +79,16 @@ export default class App extends React.Component {
   }
 
   handleDisplay() {
+    fetch(`/api/favorites`)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          favorites: data
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     this.setState({display: true});
   }
 
@@ -103,7 +125,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </div>
-              <button className="btn btn-primary"  onClick={() => this.addFavorite(name, this.state.zip)}>Add to favorites</button>
+              <button className="btn btn-primary" onClick={() => this.addFavorite(this.state.zip, name)}>Add to favorites</button>
             </div>
           </div>
         </div>
@@ -118,9 +140,9 @@ export default class App extends React.Component {
         return (
           <li className="list-group-item d-flex justify-content-between py-4 grey" key={index}>
             <div className="city" onClick={() => this.resetState(item.zip)}>
-              {item.name}
+              {item.city}
             </div>
-            <button type="button" className="btn btn-default" id={item.zip} onClick={() => this.removeZip(item.zip)}>X</button>
+            <button type="button" className="btn btn-default" onClick={() => this.removeZip(item.zip)}>X</button>
           </li>
         );
       });
@@ -133,13 +155,10 @@ export default class App extends React.Component {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item active"></li>
-              <li className="nav-item"></li>
-              <li className="nav-item"></li>
-            </ul>
+            <div className="navbar-nav mr-auto">
+            </div>
             <form className="form-inline my-2 my-lg-0" onSubmit={this.handleSubmit} _lpchecked="1">
-              <input className="form-control mr-sm-2" type="text" required placeholder="Zip Code" aria-label="Zip Code" value={this.state.value} onChange={this.handleChange} onInput={this.handleDisplay} />
+              <input className="form-control mr-sm-2" type="text" required placeholder="Zip Code" aria-label="Zip Code" value={this.state.value} onChange={this.handleChange} onFocus={this.handleDisplay} />
               <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
           </div>
