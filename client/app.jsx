@@ -37,6 +37,7 @@ export default class App extends React.Component {
     }
     if (zip.length !== 5) {
       window.alert("Zip Code must be 5 digits");
+      return;
     }
     fetch(`/api/weather/${zip}`)
       .then(response => response.json())
@@ -89,11 +90,14 @@ export default class App extends React.Component {
       .catch(error => {
         console.error('Error:', error);
       });
-    this.setState({display: true});
+    this.setState({display: true, weather: null});
   }
 
   renderTemp() {
-    if (this.state.weather) {
+    if (!this.state.weather) { return null; }
+    if (this.state.weather.cod === '404') {
+      return <span className="text-danger">Zipcode not found!</span>
+    } else {
       const { name, main, weather, rain, wind } = this.state.weather;
       const temperature = Math.round(main.temp);
       const desc = weather[0].main;
@@ -150,23 +154,23 @@ export default class App extends React.Component {
 
     return (
       <div className="custom-container">
-        <div class="d-flex justify-content-between bg-light">
-          <div class="d-flex align-items-center ml-4">
-            <h1 class="text-success">Weather Hub</h1>
+        <div className="d-flex justify-content-between bg-light">
+          <div className="d-flex align-items-center ml-4">
+            <h1 className="text-success">Weather Hub</h1>
           </div>
-          <div class="d-flex align-items-center ml-2">
-            <form class="m-2 d-flex align-items-center" onSubmit={this.handleSubmit}>
-              <input class="form-control mr-2" type="text" required placeholder="Zip Code" value={this.state.value}
+          <div className="d-flex align-items-center ml-2">
+            <form className="m-2 d-flex align-items-center" onSubmit={this.handleSubmit}>
+              <input className="form-control mr-2" type="text" required placeholder="Zip Code" value={this.state.value}
               onChange={this.handleChange}
               onFocus={this.handleDisplay} />
-              <button class="btn btn-outline-success my-2" type="submit">Search</button>
+              <button className="btn btn-outline-success my-2" type="submit">Search</button>
             </form>
           </div>
         </div>
-        <div class="m-3 mx-lg-0">
+        <div className="m-3 mx-lg-0">
           { element }
         </div>
-        <div class="m-3 mx-lg-0">
+        <div className="m-3 mx-lg-0">
           {this.renderTemp()}
         </div>
       </div>

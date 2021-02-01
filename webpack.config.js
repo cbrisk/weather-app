@@ -16,6 +16,7 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
+        include: clientPath,
         use: {
           loader: 'babel-loader',
           options: {
@@ -39,4 +40,7 @@ module.exports = {
       '/api': `http://localhost:${process.env.PORT}`
     }
   },
+  performance: {
+    hints: false
+  }
 };
