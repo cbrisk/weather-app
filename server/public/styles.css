@@ -5,6 +5,11 @@
   cursor: pointer;
 }
 
+.custom-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .grey {
   color: lightslategray;
 }

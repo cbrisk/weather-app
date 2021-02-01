@@ -106,12 +106,12 @@ export default class App extends React.Component {
               <h4 className="card-title grey">
                 {name}
               </h4>
-              <div className="row">
+              <div className="row mb-3">
                 <div className="col-sm-4">
                   <h1 className="grey">{`${temperature}°`}</h1>
                   <h6 className="grey">{desc}</h6>
                 </div>
-                <div className="col-sm-4 col-5">
+                <div className="col-sm-4 col-5 mb-3">
 
                 </div>
                 <div className="col-sm-4">
@@ -149,24 +149,24 @@ export default class App extends React.Component {
     }
 
     return (
-      <div className="container">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <div className="navbar-nav mr-auto">
-            </div>
-            <form className="form-inline my-2 my-lg-0" onSubmit={this.handleSubmit} _lpchecked="1">
-              <input className="form-control mr-sm-2" type="text" required placeholder="Zip Code" aria-label="Zip Code" value={this.state.value} onChange={this.handleChange} onFocus={this.handleDisplay} />
-              <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <div className="custom-container">
+        <div class="d-flex justify-content-between bg-light">
+          <div class="d-flex align-items-center ml-4">
+            <h1 class="text-success">Weather Hub</h1>
+          </div>
+          <div class="d-flex align-items-center ml-2">
+            <form class="m-2 d-flex align-items-center" onSubmit={this.handleSubmit}>
+              <input class="form-control mr-2" type="text" required placeholder="Zip Code" value={this.state.value}
+              onChange={this.handleChange}
+              onFocus={this.handleDisplay} />
+              <button class="btn btn-outline-success my-2" type="submit">Search</button>
             </form>
           </div>
-        </nav>
-        <div>
+        </div>
+        <div class="m-3 mx-lg-0">
           { element }
         </div>
-        <div>
+        <div class="m-3 mx-lg-0">
           {this.renderTemp()}
         </div>
       </div>
