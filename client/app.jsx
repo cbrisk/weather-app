@@ -154,8 +154,8 @@ export default class App extends React.Component {
 
     return (
       <div className="custom-container">
-        <div className="d-flex justify-content-between bg-light">
-          <div className="d-flex align-items-center ml-4">
+        <div className="d-flex justify-content-between bg-grey">
+          <div className="d-flex align-items-center text-center ml-4">
             <h1 className="text-success">Weather Hub</h1>
           </div>
           <div className="d-flex align-items-center ml-2">

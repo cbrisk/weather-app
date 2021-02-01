@@ -13,3 +13,7 @@
 .grey {
   color: lightslategray;
 }
+
+.bg-grey {
+  background-color: #cccdcf;
+}
