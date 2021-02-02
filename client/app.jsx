@@ -1,31 +1,31 @@
 import React, {useState} from 'react';
 
 export default function App () {
-  const [zip, setZip] = useState('');
+  const useStateRef = require('react-usestateref');
+
+  const [zip, setZip, ref] = useStateRef('');
   const [weatherInfo, setWeather] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [display, setDisplay] = useState(false);
 
+
   const handleChange = event => setZip(event.target.value)
 
   const resetState = zipCode => {
-    console.log(zipCode);
-    Promise.resolve()
-      .then(() => setZip(zipCode))
-      .then(() => handleSubmit())
+    setZip(zipCode);
+    handleSubmit();
   }
 
   const handleSubmit = event => {
-
     setDisplay(false);
     if (event) {
       event.preventDefault();
     }
-    if (zip.length !== 5) {
+    if (ref.current.length !== 5) {
       window.alert("Zip Code must be 5 digits");
       return;
     }
-    fetch(`/api/weather/${zip}`)
+    fetch(`/api/weather/${ref.current}`)
       .then(response => response.json())
       .then(data => setWeather(data))
       .catch(error => console.error('Error:', error));
