@@ -1,4 +1,4 @@
-# weather-app
+# weather-hub
 
 A full-stack weather app using Weather API. Also allows users to save and delete favorite zip codes
 
@@ -15,7 +15,7 @@ A full-stack weather app using Weather API. Also allows users to save and delete
 
 ## Live Demo
 
-Try the application live at [https://national-park-trip-planner.herokuapp.com/](https://national-park-trip-planner.herokuapp.com/)
+Try the application live at [https://weather-hub-app.herokuapp.com/](https://weather-hub-app.herokuapp.com/)
 
 ## Features
 
