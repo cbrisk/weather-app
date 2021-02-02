@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
+import useStateRef from 'react-usestateref';
 
 export default function App () {
-  const useStateRef = require('react-usestateref');
-
   const [zip, setZip, ref] = useStateRef('');
   const [weatherInfo, setWeather] = useState(null);
   const [favorites, setFavorites] = useState([]);
