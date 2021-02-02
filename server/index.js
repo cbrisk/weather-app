@@ -13,7 +13,10 @@ const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
 
 const db = new pg.Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 app.get('/api/weather/:zip', (req, res, next) => {

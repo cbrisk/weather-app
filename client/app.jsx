@@ -9,12 +9,14 @@ export default function App () {
   const handleChange = event => setZip(event.target.value)
 
   const resetState = zipCode => {
+    console.log(zipCode);
     Promise.resolve()
       .then(() => setZip(zipCode))
       .then(() => handleSubmit())
   }
 
   const handleSubmit = event => {
+
     setDisplay(false);
     if (event) {
       event.preventDefault();
@@ -127,7 +129,7 @@ export default function App () {
         </div>
         <div className="d-flex align-items-center ml-2">
           <form className="m-2 d-flex align-items-center" onSubmit={handleSubmit}>
-            <input className="form-control mr-2" type="text" required placeholder="Zip Code" value={zip}
+            <input className="form-control mr-2" type="text" required placeholder="Zip Code"
             onChange={handleChange}
             onFocus={handleDisplay} />
             <button className="btn btn-outline-success my-2" type="submit">Search</button>
