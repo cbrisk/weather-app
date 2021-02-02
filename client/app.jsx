@@ -1,37 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      zip: '',
-      weather: null,
-      favorites: [],
-      display: false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDisplay = this.handleDisplay.bind(this);
-    this.removeZip = this.removeZip.bind(this);
-    this.addFavorite = this.addFavorite.bind(this);
-    this.resetState = this.resetState.bind(this);
+export default function App () {
+  const [zip, setZip] = useState('');
+  const [weatherInfo, setWeather] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+  const [display, setDisplay] = useState(false);
+
+  const handleChange = event => setZip(event.target.value)
+
+  const resetState = zipCode => {
+    Promise.resolve()
+      .then(() => setZip(zipCode))
+      .then(() => handleSubmit())
   }
 
-  handleChange(event) {
-    this.setState({ zip: event.target.value });
-  }
-
-  resetState(zipCode) {
-    this.setState({
-      zip: zipCode
-    }, () => {
-      this.handleSubmit();
-    });
-  }
-
-  handleSubmit(event) {
-    this.setState({ display: false });
-    const { zip } = this.state;
+  const handleSubmit = event => {
+    setDisplay(false);
     if (event) {
       event.preventDefault();
     }
@@ -41,17 +25,11 @@ export default class App extends React.Component {
     }
     fetch(`/api/weather/${zip}`)
       .then(response => response.json())
-      .then(data => {
-        this.setState({
-          weather: data
-        });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+      .then(data => setWeather(data))
+      .catch(error => console.error('Error:', error));
   }
 
-  addFavorite(zip, name) {
+  const addFavorite = (zip, name) => {
     const body = { zip, name };
     fetch(`/api/favorites`, {
       method: 'POST',
@@ -60,45 +38,34 @@ export default class App extends React.Component {
       },
       body: JSON.stringify(body)
     })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+      .catch(error => console.error('Error:', error));
   }
 
-  removeZip(zip) {
+  const removeZip = zip => {
     fetch(`/api/favorites/${zip}`, {
       method: 'DELETE'
     })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    let copyFavs = this.state.favorites.slice();
+      .catch(error => console.error('Error:', error));
+    let copyFavs = favorites.slice();
     copyFavs = copyFavs.filter(item => item.zip !== zip);
-    this.setState({
-      favorites: copyFavs
-    });
+    setFavorites(copyFavs);
   }
 
-  handleDisplay() {
+  const handleDisplay = () => {
     fetch(`/api/favorites`)
       .then(response => response.json())
-      .then(data => {
-        this.setState({
-          favorites: data
-        });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    this.setState({display: true, weather: null});
+      .then(data => setFavorites(data))
+      .catch(error => console.error('Error:', error));
+    setDisplay(true);
+    setWeather(null);
   }
 
-  renderTemp() {
-    if (!this.state.weather) { return null; }
-    if (this.state.weather.cod === '404') {
+  const renderTemp = () => {
+    if (!weatherInfo) { return null; }
+    if (weatherInfo.cod === '404') {
       return <span className="text-danger">Zipcode not found!</span>
     } else {
-      const { name, main, weather, rain, wind } = this.state.weather;
+      const { name, main, weather, rain, wind } = weatherInfo;
       const temperature = Math.round(main.temp);
       const desc = weather[0].main;
       const rainfall = rain ? Math.round(rain['1h']) : 0;
@@ -129,7 +96,7 @@ export default class App extends React.Component {
                   </div>
                 </div>
               </div>
-              <button className="btn btn-primary" onClick={() => this.addFavorite(this.state.zip, name)}>Add to favorites</button>
+              <button className="btn btn-primary" onClick={() => addFavorite(zip, name)}>Add to favorites</button>
             </div>
           </div>
         </div>
@@ -137,43 +104,42 @@ export default class App extends React.Component {
     }
   }
 
-  render() {
-    let element;
-    if (this.state.display && this.state.favorites.length) {
-      element = this.state.favorites.map((item, index) => {
-        return (
-          <li className="list-group-item d-flex justify-content-between py-4 grey" key={index}>
-            <div className="city" onClick={() => this.resetState(item.zip)}>
-              {item.city}
-            </div>
-            <button type="button" className="btn btn-default" onClick={() => this.removeZip(item.zip)}>X</button>
-          </li>
-        );
-      });
-    }
 
-    return (
-      <div className="custom-container">
-        <div className="d-flex justify-content-between bg-grey">
-          <div className="d-flex align-items-center text-center ml-4">
-            <h1 className="text-success">Weather Hub</h1>
+  let element;
+  if (display && favorites.length) {
+    element = favorites.map((item, index) => {
+      return (
+        <li className="list-group-item d-flex justify-content-between py-4 grey" key={index}>
+          <div className="city" onClick={() => resetState(item.zip)}>
+            {item.city}
           </div>
-          <div className="d-flex align-items-center ml-2">
-            <form className="m-2 d-flex align-items-center" onSubmit={this.handleSubmit}>
-              <input className="form-control mr-2" type="text" required placeholder="Zip Code" value={this.state.value}
-              onChange={this.handleChange}
-              onFocus={this.handleDisplay} />
-              <button className="btn btn-outline-success my-2" type="submit">Search</button>
-            </form>
-          </div>
+          <button type="button" className="btn btn-default" onClick={() => removeZip(item.zip)}>X</button>
+        </li>
+      );
+    });
+  }
+
+  return (
+    <div className="custom-container">
+      <div className="d-flex justify-content-between bg-grey">
+        <div className="d-flex align-items-center text-center ml-4">
+          <h1 className="text-success">Weather Hub</h1>
         </div>
-        <div className="m-3 mx-lg-0">
-          { element }
-        </div>
-        <div className="m-3 mx-lg-0">
-          {this.renderTemp()}
+        <div className="d-flex align-items-center ml-2">
+          <form className="m-2 d-flex align-items-center" onSubmit={handleSubmit}>
+            <input className="form-control mr-2" type="text" required placeholder="Zip Code" value={zip}
+            onChange={handleChange}
+            onFocus={handleDisplay} />
+            <button className="btn btn-outline-success my-2" type="submit">Search</button>
+          </form>
         </div>
       </div>
-    );
-  }
+      <div className="m-3 mx-lg-0">
+        { element }
+      </div>
+      <div className="m-3 mx-lg-0">
+        {renderTemp()}
+      </div>
+    </div>
+  );
 }
