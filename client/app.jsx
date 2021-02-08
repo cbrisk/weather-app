@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useReducer} from 'react';
 import useStateRef from 'react-usestateref';
+
 
 export default function App () {
   const [zip, setZip, ref] = useStateRef('');
@@ -55,10 +56,12 @@ export default function App () {
   const handleDisplay = () => {
     fetch(`/api/favorites`)
       .then(response => response.json())
-      .then(data => setFavorites(data))
+      .then(data => {
+        setFavorites(data);
+        setDisplay(true);
+        setWeather(null);
+      })
       .catch(error => console.error('Error:', error));
-    setDisplay(true);
-    setWeather(null);
   }
 
   const renderTemp = () => {
