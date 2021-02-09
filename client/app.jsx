@@ -125,11 +125,11 @@ export default function App () {
 
   return (
     <div className="custom-container">
-      <div className="d-flex justify-content-between bg-grey">
-        <div className="d-flex align-items-center text-center ml-4">
+      <div className="bg-grey">
+        <div className="text-center pt-2">
           <h1 className="text-success">Weather Hub</h1>
         </div>
-        <div className="d-flex align-items-center ml-2">
+        <div className="d-flex justify-content-center align-items-center">
           <form className="m-2 d-flex align-items-center" onSubmit={handleSubmit}>
             <input className="form-control mr-2" type="text" required placeholder="Zip Code"
             onChange={handleChange}
